@@ -1,0 +1,13 @@
+{
+    "entities": [
+        {
+            "type": "dev.rlni.sandbox.entity.PlayerEntity",
+            "properties": {
+                "position": {
+                    "x": 0.0,
+                    "y": -0.9
+                }
+            }
+        }
+    ]
+}

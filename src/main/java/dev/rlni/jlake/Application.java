@@ -5,10 +5,12 @@ import org.joml.Vector2i;
 public abstract class Application {
     public record Properties(
         Vector2i windowSize,
-        String windowTitle
+        String windowTitle,
+        String initialScene
     ) { }
 
     protected Graphics mGraphics;
+    protected Scene mScene;
 
     protected Application(final Properties properties) {
         mGraphics = new Graphics(
@@ -17,15 +19,22 @@ public abstract class Application {
                 properties.windowTitle
             )
         );
+        mScene = new Scene(
+            properties.initialScene
+        );
     }
 
     public void run() {
         do {
-            this.update(mGraphics.getTimeStep());
+            final float timeStep = mGraphics.getTimeStep();
+
+            this.update(timeStep);
+            mScene.update(timeStep);
         } while (mGraphics.update());
 
+        mScene.destroy();
         mGraphics.destroy();
     }
 
-    abstract protected void update(final float timeStep);
+    protected void update(final float timeStep) {}
 }
