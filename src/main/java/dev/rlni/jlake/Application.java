@@ -21,11 +21,11 @@ public abstract class Application {
 
     public void run() {
         do {
-            this.update();
+            this.update(mGraphics.getTimeStep());
         } while (mGraphics.update());
 
         mGraphics.destroy();
     }
 
-    abstract protected void update();
+    abstract protected void update(final float timeStep);
 }

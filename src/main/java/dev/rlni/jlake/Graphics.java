@@ -10,6 +10,12 @@ public class Graphics {
         String windowTitle
     ) { }
 
+    private float mTimeStep = 0.0f, mFrameTime = 0.0f, mLastFrameTime = 0.0f;
+
+    public float getTimeStep() {
+        return mTimeStep;
+    }
+
     public Graphics(final Properties properties) {
         boolean success = GLFW.glfwInit();
         assert success : "Failed to initialize GLFW";
@@ -43,6 +49,11 @@ public class Graphics {
 
         GLFW.glfwPollEvents();
         GLFW.glfwSwapBuffers(window);
+
+        final float time = (float) GLFW.glfwGetTime();
+        mFrameTime = time - mLastFrameTime;
+        mTimeStep = Math.min(mFrameTime, 0.0333f);
+        mLastFrameTime = time;
 
         return !GLFW.glfwWindowShouldClose(window);
     }
