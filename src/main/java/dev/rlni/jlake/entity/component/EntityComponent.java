@@ -1,5 +1,5 @@
 package dev.rlni.jlake.entity.component;
 
-public abstract class EntityComponent {
-    public void destroy() { }
+public interface EntityComponent {
+    public void destroy();
 }

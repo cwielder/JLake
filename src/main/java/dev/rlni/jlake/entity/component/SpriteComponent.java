@@ -7,7 +7,7 @@ import dev.rlni.jlake.graphics.Texture;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL46;
 
-public class SpriteComponent extends EntityComponent implements IDrawable {
+public class SpriteComponent implements EntityComponent, IDrawable {
     private int mLayerHash = 0;
     private Matrix4f mMatrix = new Matrix4f();
     private Texture mTexture;
@@ -19,7 +19,6 @@ public class SpriteComponent extends EntityComponent implements IDrawable {
         this.setLayer(layer);
     }
 
-    @Override
     public void destroy() {
         mTexture.destroy();
         mShaderProgram.destroy();

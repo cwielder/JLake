@@ -3,7 +3,7 @@ package dev.rlni.jlake.entity.component;
 import dev.rlni.jlake.Graphics;
 import org.joml.*;
 
-public abstract class CameraComponent extends EntityComponent {
+public abstract class CameraComponent implements EntityComponent {
     protected Matrix4f mProjection = new Matrix4f();
     protected Matrix4f mView = new Matrix4f();
     protected Matrix4f mViewProjection = new Matrix4f();
@@ -13,6 +13,9 @@ public abstract class CameraComponent extends EntityComponent {
 
     protected CameraComponent(final Vector3f position, final Vector3f lookTarget, final Vector3f up) {
         this.setView(position, lookTarget, up);
+    }
+
+    public void destroy() {
     }
 
     public void setView(final Vector3f position, final Vector3f lookTarget, final Vector3f up) {
