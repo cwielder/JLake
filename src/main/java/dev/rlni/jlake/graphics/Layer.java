@@ -25,7 +25,7 @@ public class Layer {
     }
 
     public void draw(final IDrawable.RenderInfo renderInfo) {
-        //mGraphicsContext.apply(); // TODO: Fix graphics context
+        mGraphicsContext.apply();
 
         for (IDrawable drawable : mDrawables) {
             drawable.draw(renderInfo);
