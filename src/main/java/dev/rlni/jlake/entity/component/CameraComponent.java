@@ -30,6 +30,12 @@ public abstract class CameraComponent extends EntityComponent {
     }
 
     public Matrix4f getViewProjection() {
+        if (mDirty) {
+            mDirty = false;
+            mViewProjection.set(mProjection);
+            mViewProjection.mul(mView);
+        }
+
         return mViewProjection;
     }
 

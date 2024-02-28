@@ -3,6 +3,7 @@ package dev.rlni.sandbox.entity;
 import dev.rlni.jlake.entity.Entity;
 import dev.rlni.jlake.entity.component.SpriteComponent;
 import dev.rlni.jlake.graphics.Texture;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -20,13 +21,12 @@ public class PlayerEntity extends Entity {
 
         SpriteComponent spriteComponent = new SpriteComponent("textures/player.png", "main", Texture.FilterMode.LINEAR);
         spriteComponent.setLayer("main");
-        spriteComponent.getMatrix().translate(mPosition.x(), mPosition.y(), 0.0f);
         this.addComponent("sprite", spriteComponent);
     }
 
     @Override
     public void update(final float timeStep) {
-        ((SpriteComponent) this.getComponent("sprite")).getMatrix().translate(mPosition);
+        ((SpriteComponent) this.getComponent("sprite")).setMatrix(new Matrix4f().translate(mPosition).scale(0.4f));
     }
 
     @Override
