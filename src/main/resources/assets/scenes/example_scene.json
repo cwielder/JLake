@@ -1,6 +1,15 @@
 {
     "entities": [
         {
+            "type": "dev.rlni.sandbox.entity.CameraEntity",
+            "properties": {
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0
+                }
+            }
+        },
+        {
             "type": "dev.rlni.sandbox.entity.PlayerEntity",
             "properties": {
                 "position": {

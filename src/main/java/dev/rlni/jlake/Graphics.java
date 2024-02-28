@@ -1,16 +1,22 @@
 package dev.rlni.jlake;
 
+import dev.rlni.jlake.graphics.LayerStack;
+import dev.rlni.jlake.graphics.PrimitiveShape;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL46;
+import org.lwjgl.system.MemoryUtil;
 
-public class Graphics {
+public final class Graphics {
     public record Properties(
         Vector2i windowSize,
         String windowTitle
     ) { }
 
-    private float mTimeStep = 0.0f, mFrameTime = 0.0f, mLastFrameTime = 0.0f;
+    private float mTimeStep = 0.0f, mLastFrameTime = 0.0f;
+    private final LayerStack mLayerStack = new LayerStack();
 
     public float getTimeStep() {
         return mTimeStep;
@@ -37,9 +43,21 @@ public class Graphics {
 
         GLFW.glfwMakeContextCurrent(window);
         GL.createCapabilities();
+
+        GL46.glEnable(GL46.GL_DEBUG_OUTPUT);
+        GL46.glEnable(GL46.GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        GL46.glDebugMessageCallback((source, type, id, severity, length, message, userParam) -> {
+            String messageString = MemoryUtil.memUTF8(message);
+
+            System.out.println(messageString);
+        }, 0);
+
+        PrimitiveShape.init();
     }
 
     public void destroy() {
+        mLayerStack.destroy();
+
         GLFW.glfwDestroyWindow(GLFW.glfwGetCurrentContext());
         GLFW.glfwTerminate();
     }
@@ -51,10 +69,23 @@ public class Graphics {
         GLFW.glfwSwapBuffers(window);
 
         final float time = (float) GLFW.glfwGetTime();
-        mFrameTime = time - mLastFrameTime;
-        mTimeStep = Math.min(mFrameTime, 0.0333f);
+        final float frameTime = time - mLastFrameTime;
+        mTimeStep = Math.min(frameTime, 0.0333f); // TODO: ??
         mLastFrameTime = time;
 
+        mLayerStack.drawLayers();
+
         return !GLFW.glfwWindowShouldClose(window);
+    }
+
+    public LayerStack getLayerStack() {
+        return mLayerStack;
+    }
+
+    public static Vector2i getFramebufferSize() {
+        int[] width = new int[1];
+        int[] height = new int[1];
+        GLFW.glfwGetFramebufferSize(GLFW.glfwGetCurrentContext(), width, height);
+        return new Vector2i(width[0], height[0]);
     }
 }

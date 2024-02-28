@@ -1,31 +1,32 @@
 package dev.rlni.sandbox.entity;
 
 import dev.rlni.jlake.entity.Entity;
+import dev.rlni.jlake.entity.component.SpriteComponent;
+import dev.rlni.jlake.graphics.Texture;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 public class PlayerEntity extends Entity {
     public record Data(
         Vector2f position
     ) { }
 
-    public PlayerEntity() {
-        System.out.println("PlayerEntity created");
-    }
-
-    @Override
-    public void destroy() {
-        System.out.println("PlayerEntity destroyed");
-    }
+    private Vector3f mPosition = null;
 
     @Override
     public void init(Object properties) {
         Data data = (Data) properties;
-        System.out.println("PlayerEntity initialized with position: " + data.position().x + ", " + data.position().y);
+        mPosition = new Vector3f(data.position(), 0.0f);
+
+        SpriteComponent spriteComponent = new SpriteComponent("textures/player.png", "main", Texture.FilterMode.LINEAR);
+        spriteComponent.setLayer("main");
+        spriteComponent.getMatrix().translate(mPosition.x(), mPosition.y(), 0.0f);
+        this.addComponent("sprite", spriteComponent);
     }
 
     @Override
     public void update(final float timeStep) {
-        System.out.println("PlayerEntity updated");
+        ((SpriteComponent) this.getComponent("sprite")).getMatrix().translate(mPosition);
     }
 
     @Override
