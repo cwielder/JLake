@@ -4,6 +4,7 @@ import dev.rlni.jlake.entity.component.CameraComponent;
 
 public interface IDrawable {
     public record RenderInfo(
+        Framebuffer framebuffer,
         CameraComponent camera
     ) { }
 

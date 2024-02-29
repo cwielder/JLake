@@ -38,9 +38,10 @@ public final class Texture {
         R8(GL46.GL_R8),
         RGB8(GL46.GL_RGB8),
         RGBA8(GL46.GL_RGBA8),
+        RGBA16F(GL46.GL_RGBA16F),
         RGBA32F(GL46.GL_RGBA32F),
         DEPTH24_STENCIL8(GL46.GL_DEPTH24_STENCIL8),
-        DEPTH32_STENCIL8(GL46.GL_DEPTH32F_STENCIL8),
+        DEPTH32F_STENCIL8(GL46.GL_DEPTH32F_STENCIL8),
 
         R(GL46.GL_R),
         RGB(GL46.GL_RGB),
@@ -98,6 +99,22 @@ public final class Texture {
     public void bind(final int slot) {
         assert mId != GL46.GL_NONE : "Cannot bind invalid texture";
         GL46.glBindTextureUnit(slot, mId);
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public Format getFormat() {
+        return mFormat;
+    }
+
+    public Vector2i getSize() {
+        return mSize;
+    }
+
+    public FilterMode getFilterMode() {
+        return mFilterMode;
     }
 
     public void initFromFile(final String texturePath, final FilterMode filterMode) {

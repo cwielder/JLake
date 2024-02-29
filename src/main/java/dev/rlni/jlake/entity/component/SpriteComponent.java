@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL46;
 public class SpriteComponent implements EntityComponent, IDrawable {
     private int mLayerHash = 0;
     private Matrix4f mMatrix = new Matrix4f();
-    private Texture mTexture;
-    private ShaderProgram mShaderProgram;
+    private final Texture mTexture;
+    private final ShaderProgram mShaderProgram;
 
     public SpriteComponent(final String texturePath, final String layer, final Texture.FilterMode filterMode) {
         mTexture = new Texture(texturePath, filterMode);

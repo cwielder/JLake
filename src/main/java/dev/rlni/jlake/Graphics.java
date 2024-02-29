@@ -16,7 +16,7 @@ public final class Graphics {
     ) { }
 
     private float mTimeStep = 0.0f, mLastFrameTime = 0.0f;
-    private final LayerStack mLayerStack = new LayerStack();
+    private final LayerStack mLayerStack;
 
     public float getTimeStep() {
         return mTimeStep;
@@ -53,6 +53,7 @@ public final class Graphics {
         }, 0);
 
         PrimitiveShape.init();
+        mLayerStack = new LayerStack(properties.windowSize);
     }
 
     public void destroy() {
