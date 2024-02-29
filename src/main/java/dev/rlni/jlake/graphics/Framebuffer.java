@@ -116,6 +116,9 @@ public class Framebuffer {
         if ((components.getValue() & Component.DEPTH.getValue()) != 0) {
             throw new RuntimeException("Cannot clear depth buffer with integer value!");
         }
+        // TODO: Stencil
+
+        MemoryUtil.memFree(buffer);
     }
 
     public void resize(final Vector2i size) {
