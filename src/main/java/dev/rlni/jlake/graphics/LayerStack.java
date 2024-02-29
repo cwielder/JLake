@@ -2,7 +2,6 @@ package dev.rlni.jlake.graphics;
 
 import org.joml.Vector2i;
 import org.joml.Vector4f;
-import org.joml.Vector4i;
 import org.lwjgl.opengl.GL46;
 
 import java.util.HashMap;
@@ -62,11 +61,11 @@ public final class LayerStack {
 
     public void drawLayers() {
         Framebuffer.getBackbuffer().clear(new Vector4f(0.0f, 0.0f, 0.0f, 1.0f), Framebuffer.Component.COLOR, 0);
-        Framebuffer.getBackbuffer().clear(new Vector4i(1, 1, 1, 1), Framebuffer.Component.DEPTH, 0);
+        Framebuffer.getBackbuffer().clear(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f), Framebuffer.Component.DEPTH, 0);
 
         mFramebuffer.bind(Framebuffer.BindMode.DRAW);
-        mFramebuffer.clear(new Vector4f(0.0f, 0.0f, 0.0f, 1.0f), Framebuffer.Component.COLOR, 0);
-        mFramebuffer.clear(new Vector4i(1, 1, 1, 1), Framebuffer.Component.DEPTH, 0);
+        mFramebuffer.clear(new Vector4f(1.0f, 0.3f, 0.3f, 0.3f), Framebuffer.Component.COLOR, 0);
+        mFramebuffer.clear(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f), Framebuffer.Component.DEPTH, 0);
 
         for (Layer layer : mLayers.values()) {
             final IDrawable.RenderInfo renderInfo = new IDrawable.RenderInfo(

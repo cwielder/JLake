@@ -2,7 +2,6 @@ package dev.rlni.jlake;
 
 import dev.rlni.jlake.graphics.LayerStack;
 import dev.rlni.jlake.graphics.PrimitiveShape;
-import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -32,6 +31,8 @@ public final class Graphics {
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GLFW.GLFW_TRUE);
 
+        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, GLFW.GLFW_TRUE);
+
         long window = GLFW.glfwCreateWindow(
             properties.windowSize.x,
             properties.windowSize.y,
@@ -49,7 +50,11 @@ public final class Graphics {
         GL46.glDebugMessageCallback((source, type, id, severity, length, message, userParam) -> {
             String messageString = MemoryUtil.memUTF8(message);
 
-            System.out.println(messageString);
+            if (severity == GL46.GL_DEBUG_SEVERITY_HIGH) {
+                throw new RuntimeException("OpenGL Error: " + messageString);
+            } else {
+                System.out.println("OpenGL Message: " + messageString);
+            }
         }, 0);
 
         PrimitiveShape.init();

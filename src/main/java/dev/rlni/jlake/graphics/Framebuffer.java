@@ -4,6 +4,7 @@ import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.joml.Vector4i;
 import org.lwjgl.opengl.GL46;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -43,7 +44,7 @@ public class Framebuffer {
     public Framebuffer(final Vector2i size) {
         mSize = size;
 
-        mId = GL46.glGenFramebuffers();
+        mId = GL46.glCreateFramebuffers();
         assert mId != GL46.GL_NONE : "Failed to create framebuffer";
     }
 
@@ -91,23 +92,30 @@ public class Framebuffer {
     }
 
     public void clear(final Vector4f value, final Component components, final int drawBuffer) {
+        FloatBuffer buffer = MemoryUtil.memAllocFloat(4);
+        value.get(buffer);
+
         if ((components.getValue() & Component.COLOR.getValue()) != 0) {
-            GL46.glClearNamedFramebufferfv(mId, GL46.GL_COLOR, drawBuffer, value.get(FloatBuffer.wrap(new float[4])));
+            GL46.glClearNamedFramebufferfv(mId, GL46.GL_COLOR, drawBuffer, buffer);
         }
         if ((components.getValue() & Component.DEPTH.getValue()) != 0) {
-            GL46.glClearNamedFramebufferfv(mId, GL46.GL_DEPTH, 0, value.get(FloatBuffer.wrap(new float[1])));
+            GL46.glClearNamedFramebufferfv(mId, GL46.GL_DEPTH, 0, buffer);
         }
         // TODO: Stencil
+
+        MemoryUtil.memFree(buffer);
     }
 
     public void clear(final Vector4i value, final Component components, final int drawBuffer) {
+        IntBuffer buffer = MemoryUtil.memAllocInt(4);
+        value.get(buffer);
+
         if ((components.getValue() & Component.COLOR.getValue()) != 0) {
-            GL46.glClearNamedFramebufferiv(mId, GL46.GL_COLOR, drawBuffer, value.get(IntBuffer.wrap(new int[4])));
+            GL46.glClearNamedFramebufferiv(mId, GL46.GL_COLOR, drawBuffer, buffer);
         }
         if ((components.getValue() & Component.DEPTH.getValue()) != 0) {
-            GL46.glClearNamedFramebufferiv(mId, GL46.GL_DEPTH, 0, value.get(IntBuffer.wrap(new int[1])));
+            throw new RuntimeException("Cannot clear depth buffer with integer value!");
         }
-        // TODO: Stencil
     }
 
     public void resize(final Vector2i size) {
@@ -153,7 +161,8 @@ public class Framebuffer {
         assert mId != GL46.GL_NONE : "Cannot finalize backbuffer!";
         assert !mFinalized : "Framebuffer already finalized!";
 
-        final int[] attachments = new int[32];
+        // TODO: is there a better way to do this?
+        final int[] attachments = new int[mTextureBuffers.size()];
         for (int i = 0; i < mTextureBuffers.size(); i++) {
             attachments[i] = GL46.GL_COLOR_ATTACHMENT0 + i;
         }
