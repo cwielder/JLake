@@ -4,10 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dev.rlni.jlake.entity.Entity;
 import dev.rlni.jlake.entity.component.EntityComponent;
+import dev.rlni.jlake.event.IEvent;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public final class Scene {
     private record EntityEntry(
@@ -44,6 +43,10 @@ public final class Scene {
         for (Entity entity : mEntities) {
             entity.update(timeStep);
         }
+    }
+
+    public void onEvent(final IEvent event) {
+
     }
 
     private void clearEntities() {

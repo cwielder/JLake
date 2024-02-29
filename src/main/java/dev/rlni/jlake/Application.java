@@ -3,6 +3,7 @@ package dev.rlni.jlake;
 import dev.rlni.jlake.entity.Entity;
 import dev.rlni.jlake.entity.component.CameraComponent;
 import dev.rlni.jlake.entity.component.EntityComponent;
+import dev.rlni.jlake.event.IEvent;
 import dev.rlni.jlake.graphics.IDrawable;
 import org.joml.Vector2i;
 
@@ -18,6 +19,8 @@ public abstract class Application {
     protected Graphics mGraphics;
     protected Scene mScene;
 
+    private static final ArrayList<IEvent> sEventQueue = new ArrayList<>();
+
     protected Application(final Properties properties) {
         mGraphics = new Graphics(
             new Graphics.Properties(
@@ -30,6 +33,10 @@ public abstract class Application {
         );
     }
 
+    public static void raiseEvent(IEvent event) {
+        sEventQueue.add(event);
+    }
+
     public void run() {
         this.intermoduleDataTransfer();
 
@@ -37,6 +44,7 @@ public abstract class Application {
             final float timeStep = mGraphics.getTimeStep();
 
             this.update(timeStep);
+            this.handleEvents();
             mScene.update(timeStep);
 
             this.intermoduleDataTransfer();
@@ -47,6 +55,19 @@ public abstract class Application {
     }
 
     protected void update(final float timeStep) {}
+
+    private void onEvent(final IEvent event) {
+        // handle scene switch
+    }
+
+    private void handleEvents() {
+        for (final IEvent event : sEventQueue) {
+            this.onEvent(event);
+            mScene.onEvent(event);
+            mGraphics.onEvent(event);
+        }
+        sEventQueue.clear();
+    }
 
     private void intermoduleDataTransfer() {
         // Link graphics and scene

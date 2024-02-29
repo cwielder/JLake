@@ -1,5 +1,6 @@
 package dev.rlni.jlake;
 
+import dev.rlni.jlake.event.*;
 import dev.rlni.jlake.graphics.LayerStack;
 import dev.rlni.jlake.graphics.PrimitiveShape;
 import org.joml.Vector2i;
@@ -41,6 +42,42 @@ public final class Graphics {
             0
         );
         assert window != 0 : "Failed to create window";
+
+        GLFW.glfwSetWindowIconifyCallback(window, (windowHandle, iconified) -> {
+            if (!iconified) {
+                Application.raiseEvent(new WindowMaximizeEvent());
+            }
+        });
+
+        GLFW.glfwSetWindowSizeCallback(window, (windowHandle, width, height) -> {
+            if (width == 0 || height == 0) {
+                Application.raiseEvent(new WindowMinimizeEvent());
+            } else {
+                Application.raiseEvent(new WindowResizeEvent(new Vector2i(width, height)));
+            }
+        });
+
+        GLFW.glfwSetKeyCallback(window, (windowHandle, key, scancode, action, mods) -> {
+            if (action == GLFW.GLFW_PRESS) {
+                Application.raiseEvent(new KeyPressEvent(key, scancode, mods));
+            } else if (action == GLFW.GLFW_RELEASE) {
+                Application.raiseEvent(new KeyReleaseEvent(key, scancode, mods));
+            } else if (action == GLFW.GLFW_REPEAT) {
+                Application.raiseEvent(new KeyRepeatEvent(key, scancode, mods));
+            }
+        });
+
+        GLFW.glfwSetMouseButtonCallback(window, (windowHandle, button, action, mods) -> {
+            if (action == GLFW.GLFW_PRESS) {
+                Application.raiseEvent(new MousePressEvent(button, mods));
+            } else if (action == GLFW.GLFW_RELEASE) {
+                Application.raiseEvent(new MouseReleaseEvent(button, mods));
+            }
+        });
+
+        GLFW.glfwSetCursorPosCallback(window, (windowHandle, xpos, ypos) ->
+            Application.raiseEvent(new MouseMoveEvent(xpos, ypos))
+        );
 
         GLFW.glfwMakeContextCurrent(window);
         GL.createCapabilities();
@@ -86,6 +123,12 @@ public final class Graphics {
 
     public LayerStack getLayerStack() {
         return mLayerStack;
+    }
+
+    public void onEvent(final IEvent event) {
+        if (event instanceof WindowResizeEvent e) {
+            mLayerStack.resize(e.getSize());
+        }
     }
 
     public static Vector2i getFramebufferSize() {

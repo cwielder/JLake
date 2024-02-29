@@ -126,22 +126,23 @@ public class Framebuffer {
 
         mSize = size;
 
-        // As for the texture buffers, we can't resize them so we'll have to destroy them and recreate them
-        ArrayList<Texture> textureBuffers = new ArrayList<>(mTextureBuffers.size());
-        for (int i = 0; i < mTextureBuffers.size(); i++) {
-            Texture texture = mTextureBuffers.get(i);
-            textureBuffers.add(new Texture(size, texture.getFormat(), texture.getFilterMode()));
-            GL46.glNamedFramebufferTexture(mId, GL46.GL_COLOR_ATTACHMENT0 + i, texture.getId(), 0);
+        // As for the texture buffers, we can't resize them, so we'll have to destroy them and recreate them
+        ArrayList<Texture> newTextureBuffers = new ArrayList<>(mTextureBuffers.size());
+        int i = 0;
+        for (Texture texture : mTextureBuffers) {
+            newTextureBuffers.add(new Texture(mSize, texture.getFormat(), texture.getFilterMode()));
+            GL46.glNamedFramebufferTexture(mId, GL46.GL_COLOR_ATTACHMENT0 + i, mTextureBuffers.get(i).getId(), 0);
             texture.destroy();
+            i++;
         }
 
-        mTextureBuffers = textureBuffers;
+        mTextureBuffers = newTextureBuffers;
 
         if (mDepthStencilBuffer != null) {
-            Texture depthStencilBuffer = new Texture(size, mDepthStencilBuffer.getFormat(), mDepthStencilBuffer.getFilterMode());
-            GL46.glNamedFramebufferTexture(mId, GL46.GL_DEPTH_STENCIL_ATTACHMENT, depthStencilBuffer.getId(), 0);
             mDepthStencilBuffer.destroy();
-            mDepthStencilBuffer = depthStencilBuffer;
+            mDepthStencilBuffer = new Texture(mSize, mDepthStencilBuffer.getFormat(), mDepthStencilBuffer.getFilterMode());
+
+            GL46.glNamedFramebufferTexture(mId, GL46.GL_DEPTH_STENCIL_ATTACHMENT, mDepthStencilBuffer.getId(), 0);
         }
     }
 

@@ -55,6 +55,16 @@ public final class LayerStack {
         mLayers.clear();
     }
 
+    public void resize(final Vector2i size) {
+        GL46.glViewport(0, 0, size.x, size.y);
+
+        mFramebuffer.resize(size);
+
+        for (final Layer layer : mLayers.values()) {
+            layer.resize(size);
+        }
+    }
+
     public void pushDrawable(final IDrawable drawable) {
         this.getLayer(drawable.getLayerHash()).mDrawables.add(drawable);
     }
