@@ -1,5 +1,6 @@
 package dev.rlni.jlake.entity;
 
+import dev.rlni.jlake.Scene;
 import dev.rlni.jlake.entity.component.EntityComponent;
 import dev.rlni.jlake.event.IEvent;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 
 public abstract class Entity {
     private final Map<String, EntityComponent> mComponents = new HashMap<>();
+    public Scene mScene = null;
 
     public void init(Object properties) { }
     public void destroy() { }

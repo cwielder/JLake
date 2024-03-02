@@ -22,17 +22,33 @@ public final class Scene {
     public Scene(final String path) {
         Gson gson = new Gson();
         String json = Utils.readFileAsString(path);
-        gson.fromJson(json, SceneData.class).entities.forEach(entityData -> {
-            try {
-                Entity entity = (Entity) Class.forName(entityData.type()).getConstructor().newInstance();
-                var entityDataStructureClass = entity.getDataStructure();
-                var entityDataStructure = gson.fromJson(entityData.properties(), entityDataStructureClass);
-                entity.init(entityDataStructure);
-                mEntities.add(entity);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        gson.fromJson(json, SceneData.class).entities.forEach(entityData ->
+            this.spawnEntity(entityData.type(), entityData.properties())
+        );
+    }
+
+    public Entity spawnEntity(final String type, final Object properties) {
+        try {
+            Entity entity = (Entity) Class.forName(type).getConstructor().newInstance();
+            entity.mScene = this;
+            entity.init(properties);
+            mEntities.add(entity);
+            return entity;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void spawnEntity(final String type, final JsonObject properties) {
+        try {
+            Entity entity = (Entity) Class.forName(type).getConstructor().newInstance();
+            entity.mScene = this;
+            entity.init(new Gson().fromJson(properties, entity.getDataStructure()));
+            mEntities.add(entity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void destroy() {

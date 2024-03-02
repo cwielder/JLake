@@ -11,7 +11,11 @@ public class MouseMoveEvent implements IEvent {
         mY = y;
     }
 
-    public Vector2d getPosition() {
-        return new Vector2d(mX, mY);
+    public double getX() {
+        return mX;
+    }
+
+    public double getY() {
+        return mY;
     }
 }
