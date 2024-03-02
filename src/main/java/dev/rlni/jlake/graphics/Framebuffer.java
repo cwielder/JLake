@@ -130,8 +130,9 @@ public class Framebuffer {
         ArrayList<Texture> newTextureBuffers = new ArrayList<>(mTextureBuffers.size());
         int i = 0;
         for (Texture texture : mTextureBuffers) {
-            newTextureBuffers.add(new Texture(mSize, texture.getFormat(), texture.getFilterMode()));
-            GL46.glNamedFramebufferTexture(mId, GL46.GL_COLOR_ATTACHMENT0 + i, mTextureBuffers.get(i).getId(), 0);
+            Texture newTexture = new Texture(mSize, texture.getFormat(), texture.getFilterMode());
+            newTextureBuffers.add(newTexture);
+            GL46.glNamedFramebufferTexture(mId, GL46.GL_COLOR_ATTACHMENT0 + i, newTexture.getId(), 0);
             texture.destroy();
             i++;
         }

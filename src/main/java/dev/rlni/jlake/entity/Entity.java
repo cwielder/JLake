@@ -1,6 +1,7 @@
 package dev.rlni.jlake.entity;
 
 import dev.rlni.jlake.entity.component.EntityComponent;
+import dev.rlni.jlake.event.IEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ public abstract class Entity {
     public void init(Object properties) { }
     public void destroy() { }
     public void update(float timeStep) { }
+    public void onEvent(final IEvent event) { }
 
     public abstract Class<?> getDataStructure();
 

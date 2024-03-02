@@ -10,7 +10,7 @@ public class OrthographicCameraComponent extends CameraComponent {
     }
 
     public void setProjection(final float top, final float bottom, final float left, final float right, final float near, final float far) {
-        mProjection.ortho(left, right, bottom, top, near, far);
+        mProjection.identity().ortho(left, right, bottom, top, near, far);
 
         mDirty = true;
     }

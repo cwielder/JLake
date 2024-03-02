@@ -46,7 +46,9 @@ public final class Scene {
     }
 
     public void onEvent(final IEvent event) {
-
+        for (Entity entity : mEntities) {
+            entity.onEvent(event);
+        }
     }
 
     private void clearEntities() {
