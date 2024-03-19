@@ -1,7 +1,9 @@
 package dev.rlni.jlake;
 
 import dev.rlni.jlake.entity.Entity;
+import dev.rlni.jlake.entity.component.BoxColliderComponent;
 import dev.rlni.jlake.entity.component.CameraComponent;
+import dev.rlni.jlake.entity.component.CircleColliderComponent;
 import dev.rlni.jlake.entity.component.EntityComponent;
 import dev.rlni.jlake.event.IEvent;
 import dev.rlni.jlake.graphics.IDrawable;
@@ -18,6 +20,7 @@ public abstract class Application {
 
     protected Graphics mGraphics;
     protected Scene mScene;
+    protected Physics mPhysics;
 
     private static final ArrayList<IEvent> sEventQueue = new ArrayList<>();
 
@@ -31,6 +34,10 @@ public abstract class Application {
         mScene = new Scene(
             properties.initialScene
         );
+        mPhysics = new Physics(
+
+        );
+
     }
 
     public static void raiseEvent(IEvent event) {
@@ -71,7 +78,6 @@ public abstract class Application {
 
     private void intermoduleDataTransfer() {
         // Link graphics and scene
-
         for (Entity entity : mScene.getEntities()) {
             ArrayList<EntityComponent> drawableComponents = entity.getComponents(IDrawable.class);
             for (EntityComponent it : drawableComponents) {
@@ -85,5 +91,20 @@ public abstract class Application {
                 mGraphics.getLayerStack().getLayer(camera.getLayerHash()).setCamera(camera);
             }
         }
+
+        // Link physics and scene
+        ArrayList<BoxColliderComponent> boxColliders = new ArrayList<>();
+        ArrayList<CircleColliderComponent> circleColliders = new ArrayList<>();
+        for (Entity entity : mScene.getEntities()) {
+            ArrayList<EntityComponent> components = entity.getComponents();
+            for (EntityComponent component : components) {
+                if (component instanceof BoxColliderComponent) {
+                    boxColliders.add((BoxColliderComponent) component);
+                } else if (component instanceof CircleColliderComponent) {
+                    circleColliders.add((CircleColliderComponent) component);
+                }
+            }
+        }
+        mPhysics.update(mGraphics.getTimeStep(), circleColliders, boxColliders);
     }
 }

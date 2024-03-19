@@ -35,4 +35,8 @@ public class Utils {
         }
         return content;
     }
+
+    public static float clamp(final float value, final float min, final float max) {
+        return Math.max(min, Math.min(max, value));
+    }
 }
