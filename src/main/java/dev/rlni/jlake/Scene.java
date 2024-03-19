@@ -18,6 +18,7 @@ public final class Scene {
     ) { }
 
     private final ArrayList<Entity> mEntities = new ArrayList<>();
+    private final ArrayList<Entity> mEntitiesToAdd = new ArrayList<>();
 
     public Scene(final String path) {
         Gson gson = new Gson();
@@ -32,7 +33,7 @@ public final class Scene {
             Entity entity = (Entity) Class.forName(type).getConstructor().newInstance();
             entity.mScene = this;
             entity.init(properties);
-            mEntities.add(entity);
+            mEntitiesToAdd.add(entity);
             return entity;
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,6 +57,9 @@ public final class Scene {
     }
 
     public void update(final float timeStep) {
+        mEntities.addAll(mEntitiesToAdd);
+        mEntitiesToAdd.clear();
+
         for (Entity entity : mEntities) {
             entity.update(timeStep);
         }

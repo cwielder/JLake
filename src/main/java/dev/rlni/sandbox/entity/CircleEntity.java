@@ -50,8 +50,8 @@ public class CircleEntity extends Entity {
             });
 
             final Vector2f screenPos = new Vector2f(((OrthographicCameraComponent) cameraEntity.get().getComponent("camera")).unProject(new Vector2f((float) e.getX(), (float) e.getY())));
-            mPosition.x = screenPos.x;
-            mPosition.y = -screenPos.y;
+            //mPosition.x = screenPos.x;
+            //mPosition.y = -screenPos.y;
         }
     }
 
