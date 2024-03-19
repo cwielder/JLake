@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class ShaderProgram {
-    private class Shader {
+    private static class Shader {
         private final int mId;
 
         private static final Map<String, String> sSourceCache = new HashMap<>();
@@ -58,7 +58,26 @@ public final class ShaderProgram {
     private final int mId;
     private final Map<String, Integer> mUniformLocations;
 
+    private record CachedShader(
+        int id,
+        Map<String, Integer> uniformLocations
+    ) { }
+
+    private static final Map<String, CachedShader> sProgramCache = new HashMap<>();
+
+    public void clearCache() {
+        Shader.sSourceCache.clear();
+        sProgramCache.clear();
+    }
+
     public ShaderProgram(final String vshPath, final String fshPath) {
+        if (sProgramCache.containsKey(vshPath + fshPath)) {
+            CachedShader cachedShader = sProgramCache.get(vshPath + fshPath);
+            mId = cachedShader.id();
+            mUniformLocations = cachedShader.uniformLocations();
+            return;
+        }
+
         mId = GL46.glCreateProgram();
 
         // Compile and link shaders
@@ -101,6 +120,8 @@ public final class ShaderProgram {
             int location = GL46.glGetUniformLocation(mId, name);
             mUniformLocations.put(name, location);
         }
+
+        sProgramCache.put(vshPath + fshPath, new CachedShader(mId, mUniformLocations));
     }
 
     public void destroy() {
