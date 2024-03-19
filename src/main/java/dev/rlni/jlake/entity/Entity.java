@@ -10,6 +10,7 @@ import java.util.Map;
 
 public abstract class Entity {
     private final Map<String, EntityComponent> mComponents = new HashMap<>();
+    private boolean mIsAlive = true;
     public Scene mScene = null;
 
     public void init(Object properties) { }
@@ -39,5 +40,13 @@ public abstract class Entity {
 
     public ArrayList<EntityComponent> getComponents() {
         return new ArrayList<>(mComponents.values());
+    }
+
+    public void setAlive(final boolean isAlive) {
+        mIsAlive = isAlive;
+    }
+
+    public boolean isAlive() {
+        return mIsAlive;
     }
 }

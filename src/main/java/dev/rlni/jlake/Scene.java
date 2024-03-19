@@ -28,9 +28,9 @@ public final class Scene {
         );
     }
 
-    public Entity spawnEntity(final String type, final Object properties) {
+    public Entity spawnEntity(final Class<? extends Entity> type, final Object properties) {
         try {
-            Entity entity = (Entity) Class.forName(type).getConstructor().newInstance();
+            Entity entity = type.getConstructor().newInstance();
             entity.mScene = this;
             entity.init(properties);
             mEntitiesToAdd.add(entity);
@@ -59,6 +59,18 @@ public final class Scene {
     public void update(final float timeStep) {
         mEntities.addAll(mEntitiesToAdd);
         mEntitiesToAdd.clear();
+
+        ArrayList<Entity> entitiesToDestroy = new ArrayList<>();
+        for (Entity entity : mEntities) {
+            if (!entity.isAlive()) {
+                entitiesToDestroy.add(entity);
+            }
+        }
+
+        for (Entity entity : entitiesToDestroy) {
+            mEntities.remove(entity);
+            entity.destroy();
+        }
 
         for (Entity entity : mEntities) {
             entity.update(timeStep);

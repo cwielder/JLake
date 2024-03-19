@@ -19,7 +19,7 @@
             }
         },
         {
-            "type": "dev.rlni.sandbox.entity.CircleEntity",
+            "type": "dev.rlni.sandbox.entity.FruitSpawnerEntity",
             "properties": {
                 "position": {
                     "x": 0.0,

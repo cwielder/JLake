@@ -2,16 +2,19 @@ package dev.rlni.sandbox.entity;
 
 import dev.rlni.jlake.entity.Entity;
 import dev.rlni.jlake.entity.component.BoxColliderComponent;
+import dev.rlni.jlake.entity.component.OrthographicCameraComponent;
 import dev.rlni.jlake.entity.component.SpriteComponent;
 import dev.rlni.jlake.event.IEvent;
 import dev.rlni.jlake.event.KeyPressEvent;
 import dev.rlni.jlake.event.KeyReleaseEvent;
+import dev.rlni.jlake.event.MouseMoveEvent;
 import dev.rlni.jlake.graphics.Texture;
 import org.joml.Matrix4f;
-import org.joml.Random;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PlayerEntity extends Entity {
     public record Data(
@@ -46,10 +49,6 @@ public class PlayerEntity extends Entity {
 
         ((SpriteComponent) this.getComponent("sprite")).setMatrix(new Matrix4f().translate(mPosition).scale(0.4f));
         ((BoxColliderComponent) this.getComponent("boxCollider")).setPosition(new Vector2f(mPosition.x, mPosition.y));
-
-        float randomX = new Random().nextFloat() * 2.0f - 1.0f;
-        float randomY = new Random().nextFloat() * 2.0f - 1.0f;
-        mScene.spawnEntity("dev.rlni.sandbox.entity.CircleEntity", new CircleEntity.Data(new Vector2f(randomX, randomY)));
     }
 
     @Override
@@ -70,6 +69,16 @@ public class PlayerEntity extends Entity {
                     mMoveDirection = 0;
                 }
             }
+        } else if (event instanceof MouseMoveEvent e) {
+            AtomicReference<CameraEntity> cameraEntity = new AtomicReference<>(null);
+            mScene.getEntities().forEach(entity -> {
+                if (entity instanceof CameraEntity) {
+                    cameraEntity.set((CameraEntity) entity);
+                }
+            });
+
+            final Vector2f screenPos = new Vector2f(((OrthographicCameraComponent) cameraEntity.get().getComponent("camera")).unProject(new Vector2f((float) e.getX(), (float) e.getY())));
+            mPosition.x = screenPos.x;
         }
     }
 
