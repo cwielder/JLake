@@ -7,7 +7,7 @@ import org.joml.Vector2f;
 import java.util.Collection;
 
 public class Physics {
-    public void update(final float timeStep, final Collection<CircleColliderComponent> circleColliders, final Collection<BoxColliderComponent> boxColliders) {
+    public void update(final Collection<CircleColliderComponent> circleColliders, final Collection<BoxColliderComponent> boxColliders) {
         // circle-circle collision
         for (var circleCollider : circleColliders) {
             for (var otherCircleCollider : circleColliders) {
@@ -27,9 +27,6 @@ public class Physics {
         // circle-box collision
         for (var circleCollider : circleColliders) {
             for (var boxCollider : boxColliders) {
-                final var circleColliderPosition = circleCollider.getPosition();
-                final var boxColliderPosition = boxCollider.getPosition();
-
                 Vector2f closestPoint = new Vector2f();
                 closestPoint.x = Utils.clamp(circleCollider.getPosition().x, boxCollider.getPosition().x - boxCollider.getSize().x, boxCollider.getPosition().x + boxCollider.getSize().x);
                 closestPoint.y = Utils.clamp(circleCollider.getPosition().y, boxCollider.getPosition().y - boxCollider.getSize().y, boxCollider.getPosition().y + boxCollider.getSize().y);

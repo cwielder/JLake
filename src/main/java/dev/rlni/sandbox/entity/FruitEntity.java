@@ -23,12 +23,12 @@ public class FruitEntity extends Entity {
         Data data = (Data) properties;
         mPosition = new Vector3f(data.position(), 0.0f);
 
-        SpriteComponent spriteComponent = new SpriteComponent("textures/circle.png", "main", Texture.FilterMode.LINEAR);
+        SpriteComponent spriteComponent = new SpriteComponent("textures/apple.png", "main", Texture.FilterMode.LINEAR);
         spriteComponent.setLayer("main");
         this.addComponent("sprite", spriteComponent);
 
-        CircleColliderComponent circleColliderComponent = new CircleColliderComponent(this, (c)-> {
-            if (c.getParent() instanceof PlayerEntity player) {
+        CircleColliderComponent circleColliderComponent = new CircleColliderComponent(this, (otherCollider)-> {
+            if (otherCollider.getParent() instanceof PlayerEntity) {
                 this.setAlive(false);
             }
             return null;

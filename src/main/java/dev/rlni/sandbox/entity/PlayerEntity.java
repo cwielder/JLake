@@ -25,6 +25,8 @@ public class PlayerEntity extends Entity {
     private int mMoveDirection = 0;
     private int mScore = 0;
 
+    private static final float cMoveSpeed = 5.0f;
+
     @Override
     public void init(Object properties) {
         Data data = (Data) properties;
@@ -44,11 +46,10 @@ public class PlayerEntity extends Entity {
 
     @Override
     public void update(final float timeStep) {
-        final float speed = 5.0f;
-        mPosition.x += mMoveDirection * speed * timeStep;
+        mPosition.x += mMoveDirection * cMoveSpeed * timeStep;
 
         ((SpriteComponent) this.getComponent("sprite")).setMatrix(new Matrix4f().translate(mPosition).scale(0.4f));
-        ((BoxColliderComponent) this.getComponent("boxCollider")).setPosition(new Vector2f(mPosition.x, mPosition.y));
+        ((BoxColliderComponent) this.getComponent("boxCollider")).setPosition(new Vector2f(mPosition.x, mPosition.y - 0.09f));
     }
 
     @Override

@@ -105,6 +105,6 @@ public abstract class Application {
                 }
             }
         }
-        mPhysics.update(mGraphics.getTimeStep(), circleColliders, boxColliders);
+        mPhysics.update(circleColliders, boxColliders);
     }
 }
