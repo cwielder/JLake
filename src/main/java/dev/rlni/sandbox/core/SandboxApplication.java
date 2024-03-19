@@ -2,8 +2,8 @@ package dev.rlni.sandbox.core;
 
 import dev.rlni.jlake.Application;
 import dev.rlni.jlake.graphics.Layer;
+import dev.rlni.jlake.graphics.LayerStack;
 import org.joml.Vector2i;
-import org.lwjgl.opengl.GL46;
 
 public class SandboxApplication extends Application {
     public static void main(String[] args) {
@@ -19,7 +19,10 @@ public class SandboxApplication extends Application {
     protected SandboxApplication(Properties properties) {
         super(properties);
 
-        mGraphics.getLayerStack().addLayer(new Layer("main"));
+        LayerStack layers = mGraphics.getLayerStack();
+
+        layers.addLayer(new Layer("background"));
+        layers.addLayer(new Layer("main"));
     }
 
     @Override

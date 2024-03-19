@@ -20,12 +20,11 @@
         },
         {
             "type": "dev.rlni.sandbox.entity.FruitSpawnerEntity",
-            "properties": {
-                "position": {
-                    "x": 0.0,
-                    "y": 0.0
-                }
-            }
+            "properties": {}
+        },
+        {
+            "type": "dev.rlni.sandbox.entity.BackgroundRendererEntity",
+            "properties": {}
         }
     ]
 }
