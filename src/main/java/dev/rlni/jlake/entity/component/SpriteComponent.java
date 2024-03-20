@@ -21,7 +21,6 @@ public class SpriteComponent implements EntityComponent, IDrawable {
 
     public void destroy() {
         mTexture.destroy();
-        mShaderProgram.destroy();
     }
 
     public void setMatrix(Matrix4f matrix) {

@@ -67,6 +67,10 @@ public final class ShaderProgram {
 
     public void clearCache() {
         Shader.sSourceCache.clear();
+
+        for (CachedShader cachedShader : sProgramCache.values()) {
+            GL46.glDeleteProgram(cachedShader.id());
+        }
         sProgramCache.clear();
     }
 
@@ -122,10 +126,6 @@ public final class ShaderProgram {
         }
 
         sProgramCache.put(vshPath + fshPath, new CachedShader(mId, mUniformLocations));
-    }
-
-    public void destroy() {
-        GL46.glDeleteProgram(mId);
     }
 
     public void bind() {

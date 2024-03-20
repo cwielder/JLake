@@ -27,7 +27,6 @@ public final class LayerStack {
     public void destroy() {
         this.clearLayers();
         mFramebuffer.destroy();
-        mCompositorShader.destroy();
     }
 
     public <T extends Layer> T addLayer(final T layer) {
