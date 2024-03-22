@@ -1,7 +1,5 @@
 package dev.rlni.jlake.graphics;
 
-import dev.rlni.jlake.Application;
-import dev.rlni.jlake.Graphics;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL46;
@@ -29,6 +27,7 @@ public final class LayerStack {
     public void destroy() {
         this.clearLayers();
         mFramebuffer.destroy();
+        mCompositorShader.destroy();
     }
 
     public <T extends Layer> T addLayer(final T layer) {

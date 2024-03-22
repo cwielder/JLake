@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL46;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -57,30 +58,19 @@ public final class ShaderProgram {
 
     private final int mId;
     private final Map<String, Integer> mUniformLocations;
+    private final int mHashCode;
 
     private record CachedShader(
         int id,
         Map<String, Integer> uniformLocations
     ) { }
 
-    private static final Map<String, CachedShader> sProgramCache = new HashMap<>();
-
     public void clearCache() {
         Shader.sSourceCache.clear();
-
-        for (CachedShader cachedShader : sProgramCache.values()) {
-            GL46.glDeleteProgram(cachedShader.id());
-        }
-        sProgramCache.clear();
     }
 
     public ShaderProgram(final String vshPath, final String fshPath) {
-        if (sProgramCache.containsKey(vshPath + fshPath)) {
-            CachedShader cachedShader = sProgramCache.get(vshPath + fshPath);
-            mId = cachedShader.id();
-            mUniformLocations = cachedShader.uniformLocations();
-            return;
-        }
+        mHashCode = (vshPath + fshPath).hashCode();
 
         mId = GL46.glCreateProgram();
 
@@ -124,8 +114,10 @@ public final class ShaderProgram {
             int location = GL46.glGetUniformLocation(mId, name);
             mUniformLocations.put(name, location);
         }
+    }
 
-        sProgramCache.put(vshPath + fshPath, new CachedShader(mId, mUniformLocations));
+    public void destroy() {
+        GL46.glDeleteProgram(mId);
     }
 
     public void bind() {
@@ -229,5 +221,10 @@ public final class ShaderProgram {
         }
 
         return location;
+    }
+
+    @Override
+    public int hashCode() {
+        return mHashCode;
     }
 }

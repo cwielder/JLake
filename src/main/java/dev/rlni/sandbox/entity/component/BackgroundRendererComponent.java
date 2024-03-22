@@ -22,6 +22,7 @@ public class BackgroundRendererComponent implements EntityComponent, IDrawable {
     @Override
     public void destroy() {
         mWorkBuffer.destroy();
+        mShaderProgram.destroy();
     }
 
     public void update(final float timeStep) {

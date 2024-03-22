@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Renderer {
+public final class Renderer {
     private record LineQueueEntry(
         int layerHash,
         Line shape
@@ -40,6 +40,7 @@ public class Renderer {
 
     public void destroy() {
         // Line
+        mLineShader.destroy();
         GL46.glDeleteVertexArrays(mLineVAO);
         GL46.glDeleteBuffers(mLineVBO);
     }
