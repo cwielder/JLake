@@ -2,12 +2,17 @@ package dev.rlni.jlake;
 
 import dev.rlni.jlake.entity.component.BoxColliderComponent;
 import dev.rlni.jlake.entity.component.CircleColliderComponent;
+import dev.rlni.jlake.graphics.Renderer;
+import dev.rlni.jlake.graphics.shape.Line;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 import java.util.Collection;
 
 public class Physics {
-    public void update(final Collection<CircleColliderComponent> circleColliders, final Collection<BoxColliderComponent> boxColliders) {
+    public void update(Collection<CircleColliderComponent> circleColliders, Collection<BoxColliderComponent> boxColliders) {
+        this.debugDraw(boxColliders);
+
         // circle-circle collision
         for (var circleCollider : circleColliders) {
             for (var otherCircleCollider : circleColliders) {
@@ -46,24 +51,44 @@ public class Physics {
                 if (boxCollider == otherBoxCollider) continue;
 
                 final var boxColliderPosition = boxCollider.getPosition();
-                final var otherBoxColliderPosition = otherBoxCollider.getPosition();
-
                 final var boxColliderSize = boxCollider.getSize();
+
+                final var topLeft = new Vector2f(boxColliderPosition.x - boxColliderSize.x, boxColliderPosition.y + boxColliderSize.y);
+                final var topRight = new Vector2f(boxColliderPosition.x + boxColliderSize.x, boxColliderPosition.y + boxColliderSize.y);
+                final var bottomLeft = new Vector2f(boxColliderPosition.x - boxColliderSize.x, boxColliderPosition.y - boxColliderSize.y);
+
+                final var otherBoxColliderPosition = otherBoxCollider.getPosition();
                 final var otherBoxColliderSize = otherBoxCollider.getSize();
 
-                final var boxColliderMin = new Vector2f(boxColliderPosition.sub(boxColliderSize));
-                final var boxColliderMax = new Vector2f(boxColliderPosition.add(boxColliderSize));
-
-                final var otherBoxColliderMin = new Vector2f(otherBoxColliderPosition.sub(otherBoxColliderSize));
-                final var otherBoxColliderMax = new Vector2f(otherBoxColliderPosition.add(otherBoxColliderSize));
+                final var otherTopLeft = new Vector2f(otherBoxColliderPosition.x - otherBoxColliderSize.x, otherBoxColliderPosition.y + otherBoxColliderSize.y);
+                final var otherTopRight = new Vector2f(otherBoxColliderPosition.x + otherBoxColliderSize.x, otherBoxColliderPosition.y + otherBoxColliderSize.y);
+                final var otherBottomRight = new Vector2f(otherBoxColliderPosition.x + otherBoxColliderSize.x, otherBoxColliderPosition.y - otherBoxColliderSize.y);
 
                 if (
-                    boxColliderMin.x < otherBoxColliderMax.x && boxColliderMax.x > otherBoxColliderMin.x &&
-                    boxColliderMin.y < otherBoxColliderMax.y && boxColliderMax.y > otherBoxColliderMin.y
+                    (topLeft.x < otherTopRight.x && topRight.x > otherTopLeft.x) &&
+                    (topLeft.y > otherBottomRight.y && bottomLeft.y < otherTopRight.y)
                 ) {
                     boxCollider.callback(otherBoxCollider);
                 }
             }
+        }
+    }
+
+    private void debugDraw(Collection<BoxColliderComponent> boxColliders) {
+        for (var boxCollider : boxColliders) {
+            final var boxColliderPosition = boxCollider.getPosition();
+            final var boxColliderSize = boxCollider.getSize();
+
+            final var topLeft = new Vector2f(boxColliderPosition.x - boxColliderSize.x, boxColliderPosition.y + boxColliderSize.y);
+            final var topRight = new Vector2f(boxColliderPosition.x + boxColliderSize.x, boxColliderPosition.y + boxColliderSize.y);
+            final var bottomLeft = new Vector2f(boxColliderPosition.x - boxColliderSize.x, boxColliderPosition.y - boxColliderSize.y);
+            final var bottomRight = new Vector2f(boxColliderPosition.x + boxColliderSize.x, boxColliderPosition.y - boxColliderSize.y);
+
+            Renderer.getInstance().drawLine("main", new Line(topLeft, topRight, new Vector4f(1.0f, 0.0f, 0.0f, 1.0f)));
+            Renderer.getInstance().drawLine("main", new Line(topRight, bottomRight, new Vector4f(1.0f, 0.0f, 0.0f, 1.0f)));
+            Renderer.getInstance().drawLine("main", new Line(bottomRight, bottomLeft, new Vector4f(1.0f, 0.0f, 0.0f, 1.0f)));
+            Renderer.getInstance().drawLine("main", new Line(bottomLeft, topLeft, new Vector4f(1.0f, 0.0f, 0.0f, 1.0f)));
+            Renderer.getInstance().drawLine("main", new Line(topRight, bottomLeft, new Vector4f(1.0f, 0.0f, 0.0f, 1.0f)));
         }
     }
 }

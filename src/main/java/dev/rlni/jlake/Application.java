@@ -24,7 +24,15 @@ public abstract class Application {
 
     private static final ArrayList<IEvent> sEventQueue = new ArrayList<>();
 
+    private static Application sInstance = null;
+
+    public static Application getInstance() {
+        return sInstance;
+    }
+
     protected Application(final Properties properties) {
+        sInstance = this;
+
         mGraphics = new Graphics(
             new Graphics.Properties(
                 properties.windowSize,
@@ -37,7 +45,18 @@ public abstract class Application {
         mPhysics = new Physics(
 
         );
+    }
 
+    public Graphics getGraphics() {
+        return mGraphics;
+    }
+
+    public Scene getScene() {
+        return mScene;
+    }
+
+    public Physics getPhysics() {
+        return mPhysics;
     }
 
     public static void raiseEvent(IEvent event) {

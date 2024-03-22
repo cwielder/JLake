@@ -3,6 +3,7 @@ package dev.rlni.jlake;
 import dev.rlni.jlake.event.*;
 import dev.rlni.jlake.graphics.LayerStack;
 import dev.rlni.jlake.graphics.PrimitiveShape;
+import dev.rlni.jlake.graphics.Renderer;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -17,6 +18,7 @@ public final class Graphics {
 
     private float mTimeStep = 0.0f, mLastFrameTime = 0.0f;
     private final LayerStack mLayerStack;
+    private final Renderer mRenderer;
 
     public float getTimeStep() {
         return mTimeStep;
@@ -94,12 +96,14 @@ public final class Graphics {
             }
         }, 0);
 
+        mRenderer = new Renderer();
         PrimitiveShape.init();
         mLayerStack = new LayerStack(properties.windowSize);
     }
 
     public void destroy() {
         mLayerStack.destroy();
+        mRenderer.destroy();
 
         GLFW.glfwDestroyWindow(GLFW.glfwGetCurrentContext());
         GLFW.glfwTerminate();
@@ -123,6 +127,10 @@ public final class Graphics {
 
     public LayerStack getLayerStack() {
         return mLayerStack;
+    }
+
+    public Renderer getRenderer() {
+        return mRenderer;
     }
 
     public void onEvent(final IEvent event) {

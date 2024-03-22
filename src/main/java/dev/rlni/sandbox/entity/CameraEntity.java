@@ -48,6 +48,10 @@ public class CameraEntity extends Entity {
         }
     }
 
+    public OrthographicCameraComponent getCameraComponent() {
+        return (OrthographicCameraComponent) this.getComponent("camera");
+    }
+
     @Override
     public Class<?> getDataStructure() {
         return Data.class;

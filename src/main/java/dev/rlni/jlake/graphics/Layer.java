@@ -44,4 +44,9 @@ public class Layer {
     public String getName() {
         return mName;
     }
+
+    @Override
+    public int hashCode() {
+        return mName.hashCode();
+    }
 }

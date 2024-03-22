@@ -1,5 +1,7 @@
 package dev.rlni.jlake.graphics;
 
+import dev.rlni.jlake.Application;
+import dev.rlni.jlake.Graphics;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL46;
@@ -83,6 +85,12 @@ public final class LayerStack {
             );
 
             layer.draw(renderInfo);
+
+            // TODO: depth sorting?
+            if (renderInfo.camera() != null) {
+                Renderer.getInstance().render(layer.hashCode(), renderInfo.camera().getViewProjection());
+            }
+
             layer.mDrawables.clear();
         }
 

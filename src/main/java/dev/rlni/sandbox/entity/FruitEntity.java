@@ -1,7 +1,7 @@
 package dev.rlni.sandbox.entity;
 
 import dev.rlni.jlake.entity.Entity;
-import dev.rlni.jlake.entity.component.CircleColliderComponent;
+import dev.rlni.jlake.entity.component.BoxColliderComponent;
 import dev.rlni.jlake.entity.component.SpriteComponent;
 import dev.rlni.jlake.graphics.Texture;
 import org.joml.Matrix4f;
@@ -27,19 +27,19 @@ public class FruitEntity extends Entity {
         spriteComponent.setLayer("main");
         this.addComponent("sprite", spriteComponent);
 
-        CircleColliderComponent circleColliderComponent = new CircleColliderComponent(this, (otherCollider)-> {
+        BoxColliderComponent circleColliderComponent = new BoxColliderComponent(this, (otherCollider)-> {
             if (otherCollider.getParent() instanceof PlayerEntity) {
                 this.setAlive(false);
             }
             return null;
-        }, cSize);
-        this.addComponent("circleCollider", circleColliderComponent);
+        }, new Vector2f(cSize, cSize));
+        this.addComponent("collider", circleColliderComponent);
     }
 
     @Override
-    public void update(final float timeStep) {
+    public void update(float timeStep) {
         ((SpriteComponent) this.getComponent("sprite")).setMatrix(new Matrix4f().translate(mPosition).scale(cSize));
-        ((CircleColliderComponent) this.getComponent("circleCollider")).setPosition(new Vector2f(mPosition.x, mPosition.y));
+        ((BoxColliderComponent) this.getComponent("collider")).setPosition(new Vector2f(mPosition.x, mPosition.y));
 
         mPosition.y -= cFallSpeed * timeStep;
 
