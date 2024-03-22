@@ -32,7 +32,7 @@ public class FruitEntity extends Entity {
                 this.setAlive(false);
             }
             return null;
-        }, new Vector2f(cSize, cSize));
+        }, new Vector2f(cSize - 0.05f, cSize - 0.05f));
         this.addComponent("collider", circleColliderComponent);
     }
 

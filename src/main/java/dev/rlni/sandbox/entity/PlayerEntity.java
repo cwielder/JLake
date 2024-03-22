@@ -63,7 +63,10 @@ public class PlayerEntity extends Entity {
         mPosition.x += mMoveDirection * cMoveSpeed * timeStep;
 
         ((SpriteComponent) this.getComponent("sprite")).setMatrix(new Matrix4f().translate(mPosition).scale(0.4f));
-        ((BoxColliderComponent) this.getComponent("boxCollider")).setPosition(new Vector2f(mPosition.x, mPosition.y - 0.09f));
+
+        BoxColliderComponent boxColliderComponent = (BoxColliderComponent) this.getComponent("boxCollider");
+        boxColliderComponent.setPosition(new Vector2f(mPosition.x, mPosition.y + 0.35f));
+        boxColliderComponent.setSize(new Vector2f(0.4f, 0.01f));
     }
 
     @Override
